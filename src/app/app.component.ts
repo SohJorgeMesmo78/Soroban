@@ -47,6 +47,10 @@ export class AppComponent implements OnInit {
     this.showResult = false;
 
     // Speak the new problem
+    this.repeatProblem();
+  }
+
+  repeatProblem() {
     const opText = this.operator === '+' ? 'mais' : 'menos';
     this.speak(`${this.num1}, ${opText}, ${this.num2}`);
   }
