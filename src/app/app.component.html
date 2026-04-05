@@ -11,19 +11,20 @@
     </header>
 
     <div class="controls-container">
-      <!-- Voice Configuration Section -->
+      <!-- Voice Configuration Section (Pure Audio) -->
       <section class="control-row voice-panel">
         <button 
           class="audio-toggle-btn" 
           (click)="toggleAudio()" 
           [class.muted]="!isAudioEnabled"
           [attr.aria-label]="isAudioEnabled ? 'Desligar voz' : 'Ligar voz'"
+          title="Narração por Voz"
         >
           <svg *ngIf="isAudioEnabled" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-167q0-93-55-167T560-747v-82q127 28 203.5 125.5T840-480q0 127-76.5 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm420-120q0-54-30-101t-80-68v338q50-21 80-68t30-101Z"/></svg>
           <svg *ngIf="!isAudioEnabled" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q21-5 41-13t38-21L520-366v166L320-400H120v-160h114l-178-178 56-56 736 736-56 56Zm-312-324L333-527l-53 53-80-80 80-80 53 53 147 147v130ZM120-400v-160 160Zm640-80q0-93-55-167t-145-100v-82q127 28 203.5 125.5T840-480q0 40-10.5 77.5T799-332l-59-59q12-22 16-44.5t4-44.5Zm-212-250q40 16 66 48.5t26 71.5q0 16-3.5 31.5T627-548l-67-67v-135ZM480-747l-60 60-57-57 117-116v43l-43 43v137l57 57 3-2L480-747Z"/></svg>
         </button>
         <div class="slider-group">
-          <div class="slider-label">Velocidade <span>{{ speechRate }}x</span></div>
+          <div class="slider-label">Voz <span>{{ speechRate }}x</span></div>
           <input 
             type="range" 
             min="0.5" 
@@ -35,7 +36,36 @@
         </div>
       </section>
 
-      <!-- Digit Configuration & Action Section -->
+      <!-- Training Options Section (Operator & Blind Mode) -->
+      <section class="control-row training-panel">
+        <label class="row-label">Modos</label>
+        <div class="mode-toggles">
+          <button 
+            class="mode-btn" 
+            (click)="toggleOperatorMode()" 
+            [attr.aria-label]="'Mudar modo de operador'"
+            [title]="'Contas: ' + operatorMode"
+          >
+            <span class="mode-icon">{{ operatorMode === 'both' ? '±' : operatorMode === 'plus' ? '+' : '-' }}</span>
+            <span class="mode-text">{{ operatorMode === 'both' ? 'Misto' : operatorMode === 'plus' ? 'Adição' : 'Subtr.' }}</span>
+          </button>
+          
+          <button 
+            class="mode-btn blind-btn" 
+            (click)="toggleNumbersVisibility()" 
+            [class.active]="!isNumbersVisible"
+            [disabled]="!isAudioEnabled"
+            [attr.aria-label]="isNumbersVisible ? 'Ocultar Números' : 'Mostrar Números'"
+            title="Modo às Cegas (Anzan)"
+          >
+            <svg *ngIf="isNumbersVisible" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>
+            <svg *ngIf="!isNumbersVisible" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor"><path d="m644-428-58-58q9-47-27-83t-83-27l-58-58q17-8 37-12t40-4q75 0 127.5 52.5T676-500q0 20-4 40t-28 72ZM784-288l-56-56q38-22 70.5-52.5T860-500q-50-101-144.5-160.5T480-720q-45 0-87 8.5T311-685l-60-60q44-25 93.5-35T480-800q146 0 266 81.5T920-500q-24 62-64 115.5T784-288ZM480-200q-146 0-266-81.5T40-500q20-50 52-95.5t78-82.5l56 56q-34 26-62.5 60.5T128-500q50 101 144.5 160.5T480-280q26 0 51.5-4.5T581-299l60 60q-38 19-80.5 29T480-200Zm112-252Zm-240-28Zm-22-132-44-44q-11 11-15 25t1 29l44 44q-5-17-2-36t16-18Zm486 424L656-348q-40 28-87.5 43T480-290q-35 0-66.5-6.5T353-316l-54 54q52 24 109 37t117 13q80 0 153-24.5t136-68.5l-30-33Zm-150-150-52-52-108-108-52-52-192-192-56 56 122 122q-37 38-66.5 83.5T116-500q50 101 144.5 160.5T480-280q52 0 99-13.5t91-40.5l94 94 56-56-194-194Z"/></svg>
+            <span class="mode-text">Às Cegas</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Challenge Activation Section -->
       <section class="control-row action-panel">
         <div class="digit-input-container">
           <label for="digitCount">Dígitos</label>
@@ -50,12 +80,12 @@
           >
         </div>
         <button class="primary-action-btn" (click)="generateProblem()">
-          Nova Conta
+          Zerar / Iniciar
         </button>
       </section>
     </div>
 
-    <!-- Interactive Problem Display -->
+    <!-- Math Display Stage -->
     <section 
       class="math-stage" 
       (click)="repeatProblem()" 
@@ -63,10 +93,14 @@
       role="button"
     >
       <div class="display-box">
-        <div class="number val-1">{{ num1.toLocaleString('pt-BR') }}</div>
+        <div class="number val-1">
+          {{ isNumbersVisible ? num1.toLocaleString('pt-BR') : '------' }}
+        </div>
         <div class="op-line">
           <span class="symbol">{{ operator }}</span>
-          <div class="number val-2">{{ num2.toLocaleString('pt-BR') }}</div>
+          <div class="number val-2">
+            {{ isNumbersVisible ? num2.toLocaleString('pt-BR') : '------' }}
+          </div>
         </div>
         <div class="bottom-bar"></div>
       </div>
@@ -82,7 +116,7 @@
         (click)="toggleResult()"
         [class.active]="showResult"
       >
-        {{ showResult ? 'Ocultar Resposta' : 'Revelar Resposta' }}
+        {{ showResult ? 'Nova Conta' : 'Revelar Resposta' }}
       </button>
     </section>
 
