@@ -17,6 +17,10 @@ export class AppComponent implements OnInit {
   operator: string = '+';
   result: number = 0;
   showResult: boolean = false;
+  
+  // Voice Settings
+  isAudioEnabled: boolean = true;
+  speechRate: number = 1.0;
 
   ngOnInit() {
     this.generateProblem();
@@ -54,8 +58,15 @@ export class AppComponent implements OnInit {
     }
   }
 
+  toggleAudio() {
+    this.isAudioEnabled = !this.isAudioEnabled;
+    if (!this.isAudioEnabled && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
   private speak(text: string) {
-    if ('speechSynthesis' in window) {
+    if (this.isAudioEnabled && 'speechSynthesis' in window) {
       // Cancel any ongoing speech
       window.speechSynthesis.cancel();
 
@@ -70,7 +81,7 @@ export class AppComponent implements OnInit {
       }
       
       utterance.lang = 'pt-BR';
-      utterance.rate = 1.0;
+      utterance.rate = this.speechRate;
       utterance.pitch = 1.0;
       
       window.speechSynthesis.speak(utterance);

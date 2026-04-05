@@ -9,10 +9,35 @@
   <div class="content-card">
     <header>
       <h1 class="title">Soroban<span>Math Trainer</span></h1>
-      <p class="subtitle">Pratique seu cálculo mental!</p>
     </header>
 
-    <!-- Settings Row: Optimized for mobile (stacked or tight) -->
+    <!-- Voice & Settings Row -->
+    <div class="voice-settings">
+      <button 
+        class="icon-btn" 
+        (click)="toggleAudio()" 
+        [class.disabled]="!isAudioEnabled"
+        [attr.aria-label]="isAudioEnabled ? 'Desligar áudio' : 'Ligar áudio'"
+      >
+        <svg *ngIf="isAudioEnabled" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-167q0-93-55-167T560-747v-82q127 28 203.5 125.5T840-480q0 127-76.5 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm420-120q0-54-30-101t-80-68v338q50-21 80-68t30-101Z"/></svg>
+        <svg *ngIf="!isAudioEnabled" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q21-5 41-13t38-21L520-366v166L320-400H120v-160h114l-178-178 56-56 736 736-56 56Zm-312-324L333-527l-53 53-80-80 80-80 53 53 147 147v130ZM120-400v-160 160Zm640-80q0-93-55-167t-145-100v-82q127 28 203.5 125.5T840-480q0 40-10.5 77.5T799-332l-59-59q12-22 16-44.5t4-44.5Zm-212-250q40 16 66 48.5t26 71.5q0 16-3.5 31.5T627-548l-67-67v-135ZM480-747l-60 60-57-57 117-116v43l-43 43v137l57 57 3-2L480-747Z"/></svg>
+      </button>
+
+      <div class="speed-control">
+        <span>{{ speechRate }}x</span>
+        <input 
+          type="range" 
+          min="0.5" 
+          max="5" 
+          step="0.1" 
+          [(ngModel)]="speechRate" 
+          class="speed-slider"
+          aria-label="Velocidade da fala"
+        >
+      </div>
+    </div>
+
+    <!-- Digit Settings Row -->
     <div class="settings-row">
       <div class="input-group">
         <label for="digitCount">Dígitos</label>
@@ -31,7 +56,7 @@
       </button>
     </div>
 
-    <!-- Math Display: Centered and Large for mobile -->
+    <!-- Math Display -->
     <div class="problem-display">
       <div class="number-card top-number">
         {{ num1.toLocaleString('pt-BR') }}
@@ -45,7 +70,7 @@
       <div class="separator-line"></div>
     </div>
 
-    <!-- Result Area: Fixed height to prevent layout jumps -->
+    <!-- Result Area -->
     <div class="result-area">
       <div class="result-content" [class.visible]="showResult">
         <span class="result-value">{{ result.toLocaleString('pt-BR') }}</span>
